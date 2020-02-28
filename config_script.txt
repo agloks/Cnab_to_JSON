@@ -1,0 +1,11 @@
+##Aqui é onde setar as configurações sobre o modelo do cnab que será lido, não mude o nome das variaveis nem suas posições.
+
+$HEADER = 1 campo(s) -----------------------------------------------------
+__HEADER = 2
+$SEGMENTO-A = 3 campo(s) --------------------------------------------------------
+__ID = [2, 4]
+__AGENCIA = [10,12]
+__DIGITO_VERIFICADOR = [9]
+$SEGMENTO-B = 2 campo(s) -------------------------------------------------------
+__CONTA = [1,4]
+__NOME_FAVORECIDO = [10, 20]

@@ -2,6 +2,11 @@
 #include <sstream>
 
 #include "header/date_from_cnab.hpp"
+#include "lib/utility.cpp"
+
+#ifndef BUFFER_SIZE_LINE
+#define BUFFER_SIZE_LINE 256
+#endif
 
 date_from_cnab::date_from_cnab(const char* path):
     m_path(path)
@@ -22,18 +27,6 @@ date_from_cnab::~date_from_cnab()
     delete []this->m_agencia;
     delete []this->m_valor;
     delete []this->m_div;
-}
-
-template <typename T>
-std::string convert_to_string(T arr)
-{
-    std::string pointer_to_string;
-    std::stringstream ss;
-    
-    ss << arr;
-    ss >> pointer_to_string;
-
-    return pointer_to_string;
 }
 
 /*
@@ -57,6 +50,6 @@ void date_from_cnab::_fill_values()
     std::cout << "\ngoing to see value in m_agencia == \n" 
               << this->m_agencia << std::endl;
 
-    // std::cout << "*THIS-M_AGENCIA ===== " << convert_to_string<char *>(this->m_agencia) << std::endl; 
+    // std::cout << "*THIS-M_AGENCIA ===== " << utility::convert_to_string<char *>(this->m_agencia) << std::endl; 
     // fclose(file);
 }
