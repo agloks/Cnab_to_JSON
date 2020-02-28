@@ -1,0 +1,6 @@
+*.REM
+*.RET
+*.o
+*.a
+*.lib
+*.exe
