@@ -3,11 +3,11 @@
 #include <sstream>
 #include <algorithm>
 #include <map>
+#include <regex>
 
 #ifndef BUFFER_SIZE_LINE
 #define BUFFER_SIZE_LINE 256
 #endif
-
 
 namespace utility {
 
@@ -19,6 +19,18 @@ namespace utility {
         
         ss << arr;
         ss >> pointer_to_string;
+
+        return pointer_to_string;
+    };
+
+    template <typename T>
+    std::string convert_to_string_by_arr(const T *arr)
+    {
+        std::string pointer_to_string;
+        while(*arr++ != '\0')
+        {
+            pointer_to_string.push_back(*arr);
+        }
 
         return pointer_to_string;
     };
@@ -48,4 +60,14 @@ namespace utility {
                       << "Value: " << elem.second << std::endl;
         });
     };
+
+    int position_subtext(std::string pattern, std::string& text)
+    {
+        auto const regex_pattern = std::regex(pattern);
+        auto search_results = std::smatch{};
+        bool const result = std::regex_search(text, search_results, regex_pattern);
+        if(result) 
+            return search_results.prefix().length();
+        return -1;
+    }
 };
