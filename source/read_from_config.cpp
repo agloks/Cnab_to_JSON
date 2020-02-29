@@ -9,37 +9,17 @@
 #define BUFFER_SIZE_LINE 256
 #endif
 
-typedef std::map<std::string, int> t_msi;
 
 read_from_config::read_from_config(const char* path):
     m_path(path)
     {
     std::cout << "Read From config initialized with sucess" << std::endl;
-    // this->m_agencia = new char[BUFFER_SIZE_LINE];
-    this->m_id = new char[BUFFER_SIZE_LINE];
-    this->m_div = new char[BUFFER_SIZE_LINE];
-    this->m_valor = new char[BUFFER_SIZE_LINE];
-    this->m_conta = new char[BUFFER_SIZE_LINE];
-
+ 
     this->_fill_values();    
     }
 
 read_from_config::~read_from_config()
-{
-    delete []this->m_id;
-    delete []this->m_conta;
-    delete []this->m_agencia;
-    delete []this->m_valor;
-    delete []this->m_div;
-}
-
-/*
-fgetc = get only an unique char.
-fscanf = get the words with custom pattern, it stop when found new black space. 
-fgets = get whole line or delimiter by number size.
-fseek = move pointer for determined position of file.
-ftell = storage current position of cursor present in instance object file
-*/
+{}
 
 t_msi findLines(FILE* p_file)
 {
@@ -65,10 +45,21 @@ t_msi findLines(FILE* p_file)
     return linesFound;
 }
 
+// template<typename T>
+// bool setMembers(const std::string p_string, t_msi& p_map, T member)
+// {
+//     std::map<std::string, int>::iterator it = p_map.find(p_string);
+//     if(it == p_map.end())
+//         return false;
+    
+//     member = it->second;
+//     return true;
+// }
+
 template<typename T>
-bool setMembers(const std::string p_string, t_msi& p_map, T member)
+bool setMembers(const std::string p_string, std::map<std::string, std::string>& p_map, T& member)
 {
-    std::map<std::string, int>::iterator it = p_map.find(p_string);
+    std::map<std::string, std::string>::iterator it = p_map.find(p_string);
     if(it == p_map.end())
         return false;
     
@@ -76,7 +67,7 @@ bool setMembers(const std::string p_string, t_msi& p_map, T member)
     return true;
 }
 
-void lineHeader(FILE* p_file, t_msi& lhs_map, std::map<std::string, std::string>& rhs_map)
+void read_from_config::lineHeader(FILE* p_file, t_msi& lhs_map)
 {
     char temp[BUFFER_SIZE_LINE];
     int init_line = lhs_map["header"] + 1;
@@ -96,7 +87,8 @@ void lineHeader(FILE* p_file, t_msi& lhs_map, std::map<std::string, std::string>
         std::cout << "begin line header -> " << temp_string_patch << std::endl;
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
-            rhs_map[temp_string_patch] = cut_full_result;
+            this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
+            this->m_items_on_segments["header"] = temp_string_patch;
             std::cout << "cut full result -> " << cut_full_result << std::endl;
         }
     }
@@ -104,7 +96,7 @@ void lineHeader(FILE* p_file, t_msi& lhs_map, std::map<std::string, std::string>
     fseek(p_file, SEEK_SET, SEEK_SET);
 }
 
-void lineSegmentoA(FILE* p_file, t_msi& lhs_map, std::map<std::string, std::string>& rhs_map)
+void read_from_config::lineSegmentoA(FILE* p_file, t_msi& lhs_map)
 {
     char temp[BUFFER_SIZE_LINE];
     int init_line = lhs_map["segmento_a"] + 1;
@@ -124,7 +116,8 @@ void lineSegmentoA(FILE* p_file, t_msi& lhs_map, std::map<std::string, std::stri
         std::cout << "begin line segmento_a -> " << temp_string_patch << std::endl;
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
-            rhs_map[temp_string_patch] = cut_full_result;
+            this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
+            this->m_items_on_segments["segmento_a"] = temp_string_patch;
             std::cout << "cut full result -> " << cut_full_result << std::endl;
         }
     }
@@ -132,7 +125,7 @@ void lineSegmentoA(FILE* p_file, t_msi& lhs_map, std::map<std::string, std::stri
     fseek(p_file, SEEK_SET, SEEK_SET);
 }
 
-void lineSegmentoB(FILE* p_file, t_msi& lhs_map, std::map<std::string, std::string>& rhs_map)
+void read_from_config::lineSegmentoB(FILE* p_file, t_msi& lhs_map)
 {
     char temp[BUFFER_SIZE_LINE];
     int init_line = lhs_map["segmento_b"] + 1;
@@ -150,8 +143,13 @@ void lineSegmentoB(FILE* p_file, t_msi& lhs_map, std::map<std::string, std::stri
         std::cout << "begin line segmento_b -> " << temp_string_patch << std::endl;
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
-            rhs_map[temp_string_patch] = cut_full_result;
+            this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
+            this->m_items_on_segments["segmento_b"] = temp_string_patch;
             std::cout << "cut full result -> " << cut_full_result << std::endl;
+        } else {
+            //TODO: doesn't working, need to fix.
+            // const std::string error("FILE CONFIG CORROMPID IN LINE\n" + temp_string_full);
+            throw std::runtime_error(temp_string_full);
         }
     }
 
@@ -161,17 +159,31 @@ void lineSegmentoB(FILE* p_file, t_msi& lhs_map, std::map<std::string, std::stri
 void read_from_config::_fill_values()
 {
     std::cout << "m_path in _fill_values == " << this->m_path << std::endl;
-    FILE* file = fopen(this->m_path, "rb+");
+    FILE* file = fopen(this->m_path, "rb");
     t_msi linesFound = findLines(file);
-    std::map<std::string, std::string> valuesCamp;
 
     if(file == NULL)
         perror("Can't to open file");
     
     utility::print_map<t_msi>(linesFound);
-    lineHeader(file, linesFound, valuesCamp);
-    lineSegmentoA(file, linesFound, valuesCamp);
-    lineSegmentoB(file, linesFound, valuesCamp);
+    this->lineHeader(file, linesFound);
+    this->lineSegmentoA(file, linesFound);
+    this->lineSegmentoB(file, linesFound);
+    utility::print_map<std::map<std::string,std::string>, std::string, std::string>(this->m_values_on_item_segments);
+
+    bool sucess = false;
+    if(sucess = setMembers<std::string>("__ID", this->m_values_on_item_segments, this->m_id))
+        std::cout << "sucess set __ID with = " << this->m_id << std::endl;
+    if(sucess = setMembers<std::string>("__AGENCIA", this->m_values_on_item_segments, this->m_agencia))
+        std::cout << "sucess set __AGENCIA with = " << this->m_agencia << std::endl;
+    if(sucess = setMembers<std::string>("__CONTA", this->m_values_on_item_segments, this->m_conta))
+        std::cout << "sucess set __CONTA with = " << this->m_conta << std::endl;
+    if(sucess = setMembers<std::string>("__HEADER", this->m_values_on_item_segments, this->m_header))
+        std::cout << "sucess set __HEADER with = " << this->m_header << std::endl;
+    if(sucess = setMembers<std::string>("__DIGITO_VERIFICADOR", this->m_values_on_item_segments, this->m_div))
+        std::cout << "sucess set __DIGITO_VERIFICADOR with = " << this->m_div << std::endl;
+    if(sucess = setMembers<std::string>("__NOME_FAVORECIDO", this->m_values_on_item_segments, this->m_nome_favorecido))
+        std::cout << "sucess set __NOME_FAVORECIDO with = " << this->m_nome_favorecido << std::endl;
 
     fclose(file);
 }

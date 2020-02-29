@@ -8,4 +8,4 @@ __AGENCIA = [10,12]
 __DIGITO_VERIFICADOR = [9,9]
 $SEGMENTO-B = 2 campo(s) -------------------------------------------------------
 __CONTA = [1,4]
-__NOME_FAVORECIDO = [10,20]
+__NOME_FAVORECIDO = [314,420]
