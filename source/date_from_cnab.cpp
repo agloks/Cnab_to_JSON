@@ -2,6 +2,11 @@
 #include <sstream>
 
 #include "header/date_from_cnab.hpp"
+#include "lib/utility.cpp"
+
+#ifndef BUFFER_SIZE_LINE
+#define BUFFER_SIZE_LINE 256
+#endif
 
 date_from_cnab::date_from_cnab(const char* path):
     m_path(path)
@@ -24,18 +29,6 @@ date_from_cnab::~date_from_cnab()
     delete []this->m_div;
 }
 
-template <typename T>
-std::string convert_to_string(T arr)
-{
-    std::string pointer_to_string;
-    std::stringstream ss;
-    
-    ss << arr;
-    ss >> pointer_to_string;
-
-    return pointer_to_string;
-}
-
 /*
 fgetc = get only an unique char.
 fscanf = get the words with custom pattern, it stop when found new black space. 
@@ -47,14 +40,16 @@ ftell = storage current position of cursor present in instance object file
 void date_from_cnab::_fill_values()
 {
     std::cout << "m_path in _fill_values == " << this->m_path << std::endl;
-    FILE* file = fopen(this->m_path, "rw+");
+    FILE* file = fopen(this->m_path, "rb+");
+    if(file == NULL)
+        perror("Can't to open file");
     
     fgets(this->m_agencia, BUFFER_SIZE_LINE, file);
-    const_cast<const char*>(this->m_agencia);
+    // const_cast<const char*>(this->m_agencia);
     
     std::cout << "\ngoing to see value in m_agencia == \n" 
               << this->m_agencia << std::endl;
 
-    // std::cout << "*THIS-M_AGENCIA ===== " << convert_to_string<char *>(this->m_agencia) << std::endl; 
-    fclose(file);
+    // std::cout << "*THIS-M_AGENCIA ===== " << utility::convert_to_string<char *>(this->m_agencia) << std::endl; 
+    // fclose(file);
 }

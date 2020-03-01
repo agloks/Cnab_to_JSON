@@ -1,7 +1,9 @@
 *.REM
 *.RET
 *.o
+*.obj
 *.a
 *.lib
 *.exe
 .vscode/
+.vscode/**

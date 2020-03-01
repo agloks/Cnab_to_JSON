@@ -1,8 +1,6 @@
 #ifndef DATE_FROM_CNAB_HPP
 #define DATE_FROM_CNAB_HPP
 
-#define BUFFER_SIZE_LINE 256
-
 class date_from_cnab {
     public:
         date_from_cnab(const char* path);
