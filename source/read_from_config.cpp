@@ -3,17 +3,16 @@
 #include <map>
 
 #include "header/read_from_config.hpp"
-#include "lib/utility.cpp"
+#include "header/utility.hpp"
 
 #ifndef BUFFER_SIZE_LINE
 #define BUFFER_SIZE_LINE 256
 #endif
 
-
 read_from_config::read_from_config(const char* path):
     m_path(path)
     {
-    std::cout << "Read From config initialized with sucess" << std::endl;
+    std::cout << "Read From config initialized with sucess\n" << std::endl;
  
     this->_fill_values();    
     }
@@ -30,7 +29,7 @@ t_msi findLines(FILE* p_file)
      
     while(fgets(temp, BUFFER_SIZE_LINE, p_file) != NULL)
     {
-        temp_string = utility::convert_to_string<char *>(temp);
+        temp_string = utility::convert_to_string(temp);
         if(temp_string == "$HEADER")
             linesFound[std::string("header")] = line;
         if(temp_string == "$SEGMENTO-A")
@@ -80,16 +79,16 @@ void read_from_config::lineHeader(FILE* p_file, t_msi& lhs_map)
     while(init_line++ < end_line )
     {
         fgets(temp, BUFFER_SIZE_LINE, p_file);
-        temp_string_patch = utility::convert_to_string<char*>(temp);
-        temp_string_full = utility::convert_to_string_by_arr<char>(temp);
+        temp_string_patch = utility::convert_to_string(temp);
+        temp_string_full = utility::convert_to_string_by_arr(temp);
         int position_substring = utility::position_subtext(pattern_regex, temp_string_full);
         
-        std::cout << "begin line header -> " << temp_string_patch << std::endl;
+        // std::cout << "begin line header -> " << temp_string_patch << std::endl;
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
             this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
             this->m_items_on_segments["header"] = temp_string_patch;
-            std::cout << "cut full result -> " << cut_full_result << std::endl;
+            // std::cout << "cut full result -> " << cut_full_result << std::endl;
         }
     }
 
@@ -109,16 +108,16 @@ void read_from_config::lineSegmentoA(FILE* p_file, t_msi& lhs_map)
     while(init_line++ < end_line )
     {
         fgets(temp, BUFFER_SIZE_LINE, p_file);
-        temp_string_patch = utility::convert_to_string<char*>(temp);
-        temp_string_full = utility::convert_to_string_by_arr<char>(temp);
+        temp_string_patch = utility::convert_to_string(temp);
+        temp_string_full = utility::convert_to_string_by_arr(temp);
         int position_substring = utility::position_subtext(pattern_regex, temp_string_full);
         
-        std::cout << "begin line segmento_a -> " << temp_string_patch << std::endl;
+        // std::cout << "begin line segmento_a -> " << temp_string_patch << std::endl;
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
             this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
             this->m_items_on_segments["segmento_a"] = temp_string_patch;
-            std::cout << "cut full result -> " << cut_full_result << std::endl;
+            // std::cout << "cut full result -> " << cut_full_result << std::endl;
         }
     }
 
@@ -136,20 +135,20 @@ void read_from_config::lineSegmentoB(FILE* p_file, t_msi& lhs_map)
     
     while(fgets(temp, BUFFER_SIZE_LINE, p_file))
     {
-        temp_string_patch = utility::convert_to_string<char*>(temp);
-        temp_string_full = utility::convert_to_string_by_arr<char>(temp);
+        temp_string_patch = utility::convert_to_string(temp);
+        temp_string_full = utility::convert_to_string_by_arr(temp);
         int position_substring = utility::position_subtext(pattern_regex, temp_string_full);
         
-        std::cout << "begin line segmento_b -> " << temp_string_patch << std::endl;
+        // std::cout << "begin line segmento_b -> " << temp_string_patch << std::endl;
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
             this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
             this->m_items_on_segments["segmento_b"] = temp_string_patch;
-            std::cout << "cut full result -> " << cut_full_result << std::endl;
+            // std::cout << "cut full result -> " << cut_full_result << std::endl;
         } else {
             //TODO: doesn't working, need to fix.
-            // const std::string error("FILE CONFIG CORROMPID IN LINE\n" + temp_string_full);
-            throw std::runtime_error(temp_string_full);
+            const std::string error("FILE CONFIG CORROMPID IN LINE\n" + temp_string_full);
+            throw std::runtime_error(error).what();
         }
     }
 
@@ -169,7 +168,7 @@ void read_from_config::_fill_values()
     this->lineHeader(file, linesFound);
     this->lineSegmentoA(file, linesFound);
     this->lineSegmentoB(file, linesFound);
-    utility::print_map<std::map<std::string,std::string>, std::string, std::string>(this->m_values_on_item_segments);
+    // utility::print_map<std::map<std::string,std::string>, std::string, std::string>(this->m_values_on_item_segments);
 
     bool sucess = false;
     if(sucess = setMembers<std::string>("__ID", this->m_values_on_item_segments, this->m_id))

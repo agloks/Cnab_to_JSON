@@ -11,9 +11,14 @@ class date_from_cnab {
         char* m_agencia;
         char* m_valor;
         char* m_div;
+
+        bool fill_id(int& initPos, int& endPos);
+        bool fill_conta(int& initPos, int& endPos);
+        bool fill_agencia(int& initPos, int& endPos);
+        bool fill_valor(int& initPos, int& endPos);
+        bool fill_div(int& initPos, int& endPos);
     private:
-        const char* m_path;
-        void _fill_values();
+        FILE* m_file;
 };
 
 #endif

@@ -1,4 +1,4 @@
-##Aqui é onde setar as configurações sobre o modelo do cnab que será lido, não mude o nome das variaveis nem suas posições.
+##Aqui ï¿½ onde seta as configuraï¿½ï¿½es sobre o modelo do cnab que serï¿½ lido, nï¿½o mude o nome das variaveis nem suas posiï¿½ï¿½es.
 
 $HEADER = 1 campo(s) -----------------------------------------------------
 __HEADER = [2,2]
