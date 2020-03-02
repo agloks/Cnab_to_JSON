@@ -1,6 +1,5 @@
 #include <iostream>
 #include <sstream>
-#include <map>
 
 #include "header/read_from_config.hpp"
 #include "header/utility.hpp"
@@ -44,17 +43,6 @@ t_msi findLines(FILE* p_file)
     return linesFound;
 }
 
-// template<typename T>
-// bool setMembers(const std::string p_string, t_msi& p_map, T member)
-// {
-//     std::map<std::string, int>::iterator it = p_map.find(p_string);
-//     if(it == p_map.end())
-//         return false;
-    
-//     member = it->second;
-//     return true;
-// }
-
 template<typename T>
 bool setMembers(const std::string p_string, std::map<std::string, std::string>& p_map, T& member)
 {
@@ -87,7 +75,7 @@ void read_from_config::lineHeader(FILE* p_file, t_msi& lhs_map)
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
             this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
-            this->m_items_on_segments["header"] = temp_string_patch;
+            this->m_items_on_segments["header"].push_back(temp_string_patch);
             // std::cout << "cut full result -> " << cut_full_result << std::endl;
         }
     }
@@ -116,7 +104,7 @@ void read_from_config::lineSegmentoA(FILE* p_file, t_msi& lhs_map)
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
             this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
-            this->m_items_on_segments["segmento_a"] = temp_string_patch;
+            this->m_items_on_segments["segmento_a"].push_back(temp_string_patch);
             // std::cout << "cut full result -> " << cut_full_result << std::endl;
         }
     }
@@ -143,7 +131,7 @@ void read_from_config::lineSegmentoB(FILE* p_file, t_msi& lhs_map)
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
             this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
-            this->m_items_on_segments["segmento_b"] = temp_string_patch;
+            this->m_items_on_segments["segmento_b"].push_back(temp_string_patch);
             // std::cout << "cut full result -> " << cut_full_result << std::endl;
         } else {
             //TODO: doesn't working, need to fix.
@@ -157,14 +145,13 @@ void read_from_config::lineSegmentoB(FILE* p_file, t_msi& lhs_map)
 
 void read_from_config::_fill_values()
 {
-    std::cout << "m_path in _fill_values == " << this->m_path << std::endl;
     FILE* file = fopen(this->m_path, "rb");
     t_msi linesFound = findLines(file);
 
     if(file == NULL)
         perror("Can't to open file");
     
-    utility::print_map<t_msi>(linesFound);
+    // utility::print_map<t_msi>(linesFound);
     this->lineHeader(file, linesFound);
     this->lineSegmentoA(file, linesFound);
     this->lineSegmentoB(file, linesFound);
@@ -172,17 +159,17 @@ void read_from_config::_fill_values()
 
     bool sucess = false;
     if(sucess = setMembers<std::string>("__ID", this->m_values_on_item_segments, this->m_id))
-        std::cout << "sucess set __ID with = " << this->m_id << std::endl;
+        // std::cout << "sucess set __ID with = " << this->m_id << std::endl;
     if(sucess = setMembers<std::string>("__AGENCIA", this->m_values_on_item_segments, this->m_agencia))
-        std::cout << "sucess set __AGENCIA with = " << this->m_agencia << std::endl;
+        // std::cout << "sucess set __AGENCIA with = " << this->m_agencia << std::endl;
     if(sucess = setMembers<std::string>("__CONTA", this->m_values_on_item_segments, this->m_conta))
-        std::cout << "sucess set __CONTA with = " << this->m_conta << std::endl;
+        // std::cout << "sucess set __CONTA with = " << this->m_conta << std::endl;
     if(sucess = setMembers<std::string>("__HEADER", this->m_values_on_item_segments, this->m_header))
-        std::cout << "sucess set __HEADER with = " << this->m_header << std::endl;
+        // std::cout << "sucess set __HEADER with = " << this->m_header << std::endl;
     if(sucess = setMembers<std::string>("__DIGITO_VERIFICADOR", this->m_values_on_item_segments, this->m_div))
-        std::cout << "sucess set __DIGITO_VERIFICADOR with = " << this->m_div << std::endl;
+        // std::cout << "sucess set __DIGITO_VERIFICADOR with = " << this->m_div << std::endl;
     if(sucess = setMembers<std::string>("__NOME_FAVORECIDO", this->m_values_on_item_segments, this->m_nome_favorecido))
-        std::cout << "sucess set __NOME_FAVORECIDO with = " << this->m_nome_favorecido << std::endl;
+        // std::cout << "sucess set __NOME_FAVORECIDO with = " << this->m_nome_favorecido << std::endl;
 
     fclose(file);
 }

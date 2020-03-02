@@ -30,7 +30,23 @@ namespace utility {
         });
     };
 
+    template<typename T>
+    void print_map_vector(const T& mapa)
+    {
+        auto it_map = mapa.begin();
+        for(int k = 0; k < mapa.size(); k++)
+        {
+            std::cout << it_map->first << " -> \n ";
+            for(auto x: it_map++ -> second)
+            {
+                std::cout << "\t" << x << std::endl;
+            }
+        }
+    };
+
     int position_subtext(std::string pattern, std::string& text);
+
+    std::string string_from_fgetc(FILE* p_file, const int& len, const int& begin);
 
     void debug();
 };

@@ -10,13 +10,17 @@
 @argv[2] == path to file
 */
 int main(int argc, char* argv[])
-{    
-    if(argv[1] != NULL)
-        read_from_config test(argv[1]);
-    if(argv[2] != NULL )
-        date_from_cnab myfile(argv[2]);
+{       
+    if(argv[1] == NULL)
+        throw std::runtime_error("ARGUMENT TO CONFIG NOT DEFINED");
+    if(argv[2] == NULL )
+        throw std::runtime_error("ARGUMENT TO CNAB NOT DEFINED");
 
-    utility::debug();
+    read_from_config rfc(argv[1]);
+    date_from_cnab dfc(argv[2]);
+
+    utility::print_map<std::map<std::string, std::string>, std::string, std::string>(rfc.m_values_on_item_segments);
+    utility::print_map_vector<std::map<std::string, std::vector<std::string>>>(rfc.m_items_on_segments);
 
     return 0;
 }

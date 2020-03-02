@@ -50,7 +50,20 @@ int utility::position_subtext(std::string pattern, std::string& text)
     return -1;
 };
 
+std::string utility::string_from_fgetc(FILE* p_file, const int& len, const int& begin)
+{
+    std::string send;
+    fseek(p_file, begin, SEEK_SET);
+    for(int k = 0; k <= len; k++)
+    {
+        send.push_back(fgetc(p_file));
+    }
+
+    fseek(p_file, SEEK_SET, SEEK_SET);
+    return send;
+};
+
 void utility::debug()
 {
     std::cout << "can't understand it" << std::endl;
-}
+};

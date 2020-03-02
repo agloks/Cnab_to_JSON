@@ -6,17 +6,13 @@ class date_from_cnab {
         date_from_cnab(const char* path);
         ~date_from_cnab();
 
-        char* m_id;
-        char* m_conta;
-        char* m_agencia;
-        char* m_valor;
-        char* m_div;
+        std::string m_id;
+        std::string m_conta;
+        std::string m_agencia;
+        std::string m_valor;
+        std::string m_div;
 
-        bool fill_id(int& initPos, int& endPos);
-        bool fill_conta(int& initPos, int& endPos);
-        bool fill_agencia(int& initPos, int& endPos);
-        bool fill_valor(int& initPos, int& endPos);
-        bool fill_div(int& initPos, int& endPos);
+        void fill_member(std::string& member, int& initPos, int& endPos);
     private:
         FILE* m_file;
 };
