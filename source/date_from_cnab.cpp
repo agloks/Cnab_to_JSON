@@ -2,54 +2,39 @@
 #include <sstream>
 
 #include "header/date_from_cnab.hpp"
-#include "lib/utility.cpp"
+#include "header/utility.hpp"
 
-#ifndef BUFFER_SIZE_LINE
-#define BUFFER_SIZE_LINE 256
-#endif
 
-date_from_cnab::date_from_cnab(const char* path):
-    m_path(path)
+date_from_cnab::date_from_cnab(const char* path)
 {
-    this->m_agencia = new char[BUFFER_SIZE_LINE];
-    this->m_id = new char[BUFFER_SIZE_LINE];
-    this->m_div = new char[BUFFER_SIZE_LINE];
-    this->m_valor = new char[BUFFER_SIZE_LINE];
-    this->m_conta = new char[BUFFER_SIZE_LINE];
+    m_file = fopen(path, "r");
+    std::cout << "Date From Cnab initialized with sucess\n" << std::endl;
+    int a = 34;
+    int b = 72;
+    int c = 4;
+    int d = 1;
     
-    this->_fill_values();
-}
+    this->fill_member(this->m_id, a, b);
+    this->fill_member(this->m_div, c, d);
+
+    std::cout << "value ->m_* = " << this->m_id << std::endl;
+    std::cout << "value ->m_* = " << this->m_div << std::endl;
+};
 
 date_from_cnab::~date_from_cnab()
 {
-    delete []this->m_id;
-    delete []this->m_conta;
-    delete []this->m_agencia;
-    delete []this->m_valor;
-    delete []this->m_div;
-}
+    fclose(m_file);
+};
+
+void date_from_cnab::fill_member(std::string& member, int& initPos, int& endPos)
+{
+    member = utility::string_from_fgetc(this->m_file, std::abs(endPos - initPos), endPos);
+};
 
 /*
 fgetc = get only an unique char.
 fscanf = get the words with custom pattern, it stop when found new black space. 
 fgets = get whole line or delimiter by number size.
-fseek = move pointer for determined position of file.
+fseek = move pointer for determined position of file. # remimber that start desire is (pos - 1);
 ftell = storage current position of cursor present in instance object file
 */
-
-void date_from_cnab::_fill_values()
-{
-    std::cout << "m_path in _fill_values == " << this->m_path << std::endl;
-    FILE* file = fopen(this->m_path, "rb+");
-    if(file == NULL)
-        perror("Can't to open file");
-    
-    fgets(this->m_agencia, BUFFER_SIZE_LINE, file);
-    // const_cast<const char*>(this->m_agencia);
-    
-    std::cout << "\ngoing to see value in m_agencia == \n" 
-              << this->m_agencia << std::endl;
-
-    // std::cout << "*THIS-M_AGENCIA ===== " << utility::convert_to_string<char *>(this->m_agencia) << std::endl; 
-    // fclose(file);
-}

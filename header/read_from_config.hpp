@@ -1,6 +1,7 @@
 #ifndef READ_FROM_CNAB_HPP
 #define READ_FROM_CNAB_HPP
 #include<map>
+#include<vector>
 
 typedef std::map<std::string, int> t_msi;
 
@@ -16,7 +17,7 @@ class read_from_config {
         std::string m_nome_favorecido;
         std::string m_valor;
         std::string m_div;
-        std::map<std::string, std::string> m_items_on_segments;
+        std::map<std::string, std::vector<std::string>> m_items_on_segments;
         std::map<std::string, std::string> m_values_on_item_segments;
     private:
         const char* m_path;
