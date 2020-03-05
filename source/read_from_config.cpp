@@ -5,7 +5,7 @@
 #include "header/utility.hpp"
 
 #ifndef BUFFER_SIZE_LINE
-#define BUFFER_SIZE_LINE 256
+#define BUFFER_SIZE_LINE 242
 #endif
 
 read_from_config::read_from_config(const char* path):
@@ -29,8 +29,12 @@ t_msi findLines(FILE* p_file)
     while(fgets(temp, BUFFER_SIZE_LINE, p_file) != NULL)
     {
         temp_string = utility::convert_to_string(temp);
+        if(temp_string == "$INSTRUCAO")
+            linesFound[std::string("instrucao")] = line;
         if(temp_string == "$HEADER")
             linesFound[std::string("header")] = line;
+        if(temp_string == "$SUBHEADER")
+            linesFound[std::string("subheader")] = line;
         if(temp_string == "$SEGMENTO-A")
             linesFound[std::string("segmento_a")] = line;
         if(temp_string == "$SEGMENTO-B")
@@ -54,14 +58,15 @@ bool setMembers(const std::string p_string, std::map<std::string, std::string>& 
     return true;
 }
 
-void read_from_config::lineHeader(FILE* p_file, t_msi& lhs_map)
+void read_from_config::lineInstrucao(FILE* p_file, t_msi& lhs_map)
 {
     char temp[BUFFER_SIZE_LINE];
-    int init_line = lhs_map["header"] + 1;
-    int end_line = lhs_map["segmento_a"];
+    int init_line = lhs_map["instrucao"] + 1;
+    int end_line = lhs_map["header"];
     std::string temp_string_patch;
     std::string temp_string_full;
-    std::string pattern_regex = "\\[[0-9]{1,4}.[0-9]{1,4}\\]";
+    std::string pattern_regex = "=.";
+    std::map<std::string, std::string> temp_for_m_all_items;
     utility::jump_lines(p_file, init_line);
     
     while(init_line++ < end_line )
@@ -75,13 +80,86 @@ void read_from_config::lineHeader(FILE* p_file, t_msi& lhs_map)
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
             this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
+            temp_for_m_all_items[temp_string_patch] = cut_full_result;
+            this->m_items_on_segments["instrucao"].push_back(temp_string_patch);
+            // std::cout << "cut full result -> " << cut_full_result << std::endl;
+        } 
+    }
+
+    this->m_all_items["instrucao"].push_back(temp_for_m_all_items);
+
+    this->m_items_on_segments["instrucao"].clear();
+    fseek(p_file, SEEK_SET, SEEK_SET);
+}
+
+void read_from_config::lineHeader(FILE* p_file, t_msi& lhs_map)
+{
+    char temp[BUFFER_SIZE_LINE];
+    int init_line = lhs_map["header"] + 1;
+    int end_line = lhs_map["subheader"];
+    std::string temp_string_patch;
+    std::string temp_string_full;
+    std::string pattern_regex = "\\[[0-9]{1,4}.[0-9]{1,4}\\]";
+    std::map<std::string, std::string> temp_for_m_all_items;
+    utility::jump_lines(p_file, init_line);
+    
+    while(init_line++ < end_line )
+    {
+        fgets(temp, BUFFER_SIZE_LINE, p_file);
+        temp_string_patch = utility::convert_to_string(temp);
+        temp_string_full = utility::convert_to_string_by_arr(temp);
+        int position_substring = utility::position_subtext(pattern_regex, temp_string_full);
+        
+        // std::cout << "begin line header -> " << temp_string_patch << std::endl;
+        if(position_substring != -1) {
+            std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
+            this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
+            temp_for_m_all_items[temp_string_patch] = cut_full_result;
             this->m_items_on_segments["header"].push_back(temp_string_patch);
             // std::cout << "cut full result -> " << cut_full_result << std::endl;
         }
     }
 
+    this->m_all_items["header"].push_back(temp_for_m_all_items);
+
+    this->m_items_on_segments["header"].clear();
     fseek(p_file, SEEK_SET, SEEK_SET);
 }
+
+void read_from_config::lineSubHeader(FILE* p_file, t_msi& lhs_map)
+{
+    char temp[BUFFER_SIZE_LINE];
+    int init_line = lhs_map["subheader"] + 1;
+    int end_line = lhs_map["segmento_a"];
+    std::string temp_string_patch;
+    std::string temp_string_full;
+    std::string pattern_regex = "\\[[0-9]{1,4}.[0-9]{1,4}\\]";
+    std::map<std::string, std::string> temp_for_m_all_items;
+    utility::jump_lines(p_file, init_line);
+    
+    while(init_line++ < end_line )
+    {
+        fgets(temp, BUFFER_SIZE_LINE, p_file);
+        temp_string_patch = utility::convert_to_string(temp);
+        temp_string_full = utility::convert_to_string_by_arr(temp);
+        int position_substring = utility::position_subtext(pattern_regex, temp_string_full);
+        
+        // std::cout << "begin line header -> " << temp_string_patch << std::endl;
+        if(position_substring != -1) {
+            std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
+            this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
+            temp_for_m_all_items[temp_string_patch] = cut_full_result;
+            this->m_items_on_segments["subheader"].push_back(temp_string_patch);
+            // std::cout << "cut full result -> " << cut_full_result << std::endl;
+        }
+    }
+
+    this->m_all_items["subheader"].push_back(temp_for_m_all_items);
+
+    this->m_items_on_segments["subheader"].clear();
+    fseek(p_file, SEEK_SET, SEEK_SET);
+}
+
 
 void read_from_config::lineSegmentoA(FILE* p_file, t_msi& lhs_map)
 {
@@ -91,6 +169,7 @@ void read_from_config::lineSegmentoA(FILE* p_file, t_msi& lhs_map)
     std::string temp_string_patch;
     std::string temp_string_full;
     std::string pattern_regex = "\\[[0-9]{1,4}.[0-9]{1,4}\\]";
+    std::map<std::string, std::string> temp_for_m_all_items;
     utility::jump_lines(p_file, init_line);
     
     while(init_line++ < end_line )
@@ -104,11 +183,15 @@ void read_from_config::lineSegmentoA(FILE* p_file, t_msi& lhs_map)
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
             this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
+            temp_for_m_all_items[temp_string_patch] = cut_full_result;
             this->m_items_on_segments["segmento_a"].push_back(temp_string_patch);
             // std::cout << "cut full result -> " << cut_full_result << std::endl;
         }
     }
 
+    this->m_all_items["segmento_a"].push_back(temp_for_m_all_items);
+
+    this->m_items_on_segments["segmento_a"].clear();
     fseek(p_file, SEEK_SET, SEEK_SET);
 }
 
@@ -119,6 +202,7 @@ void read_from_config::lineSegmentoB(FILE* p_file, t_msi& lhs_map)
     std::string temp_string_patch;
     std::string temp_string_full;
     std::string pattern_regex = "\\[[0-9]{1,4}.[0-9]{1,4}\\]";
+    std::map<std::string, std::string> temp_for_m_all_items;
     utility::jump_lines(p_file, init_line);
     
     while(fgets(temp, BUFFER_SIZE_LINE, p_file))
@@ -131,6 +215,7 @@ void read_from_config::lineSegmentoB(FILE* p_file, t_msi& lhs_map)
         if(position_substring != -1) {
             std::string cut_full_result = temp_string_full.substr(position_substring, temp_string_full.size());
             this->m_values_on_item_segments[temp_string_patch] = cut_full_result;
+            temp_for_m_all_items[temp_string_patch] = cut_full_result;
             this->m_items_on_segments["segmento_b"].push_back(temp_string_patch);
             // std::cout << "cut full result -> " << cut_full_result << std::endl;
         } else {
@@ -139,9 +224,13 @@ void read_from_config::lineSegmentoB(FILE* p_file, t_msi& lhs_map)
             throw std::runtime_error(error).what();
         }
     }
+    this->m_all_items["segmento_b"].push_back(temp_for_m_all_items);
 
+
+    this->m_items_on_segments["segmento_b"].clear();
     fseek(p_file, SEEK_SET, SEEK_SET);
 }
+
 
 void read_from_config::_fill_values()
 {
@@ -152,7 +241,9 @@ void read_from_config::_fill_values()
         perror("Can't to open file");
     
     // utility::print_map<t_msi>(linesFound);
+    this->lineInstrucao(file, linesFound);
     this->lineHeader(file, linesFound);
+    this->lineSubHeader(file, linesFound);
     this->lineSegmentoA(file, linesFound);
     this->lineSegmentoB(file, linesFound);
     // utility::print_map<std::map<std::string,std::string>, std::string, std::string>(this->m_values_on_item_segments);
@@ -170,6 +261,11 @@ void read_from_config::_fill_values()
         // std::cout << "sucess set __DIGITO_VERIFICADOR with = " << this->m_div << std::endl;
     if(sucess = setMembers<std::string>("__NOME_FAVORECIDO", this->m_values_on_item_segments, this->m_nome_favorecido))
         // std::cout << "sucess set __NOME_FAVORECIDO with = " << this->m_nome_favorecido << std::endl;
+
+    if(sucess = setMembers<std::string>("__BLOCO_TRANSACAO_LINHAS_TOTAL", this->m_values_on_item_segments, this->m_bloco_transacao_linhas_total))
+    if(sucess = setMembers<std::string>("__HEADER_LINHAS_TOTAL", this->m_values_on_item_segments, this->m_header_linhas_total))
+    if(sucess = setMembers<std::string>("__SUBHEADER", this->m_values_on_item_segments, this->m_subheader))
+
 
     fclose(file);
 }

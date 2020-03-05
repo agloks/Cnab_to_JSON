@@ -1,11 +1,22 @@
 ##Aqui � onde seta as configura��es sobre o modelo do cnab que ser� lido, n�o mude o nome das variaveis nem suas posi��es.
 
-$HEADER = 1 campo(s) -----------------------------------------------------
-__HEADER = [2,2]
-$SEGMENTO-A = 3 campo(s) --------------------------------------------------------
-__ID = [2,4]
-__AGENCIA = [10,12]
-__DIGITO_VERIFICADOR = [9,9]
-$SEGMENTO-B = 2 campo(s) -------------------------------------------------------
-__CONTA = [1,4]
-__NOME_FAVORECIDO = [314,420]
+$INSTRUCAO -------------------------------------------
+__HEADER_LINHAS_TOTAL = 2
+__BLOCO_TRANSACAO_LINHAS_TOTAL = 2
+$HEADER -----------------------------------------------------
+__HEADER = [17,42]
+__CODIGO_BANCO = [0,3]
+__BANCO_BENEFICIARIO = [102,107]
+__TIPO_OPERACAO = [9,10]
+__TIPO_SERVICO = [10,11]
+$SUBHEADER -----------------------------------------------------
+__SUBHEADER = [72,81]
+$SEGMENTO-A --------------------------------------------------------
+__ID = [17,21]
+__NOME_FAVORECIDO = [42,73]
+__AGENCIA = [19,27]
+__VALOR = [101,135]
+__DIGITO_VERIFICADOR = [28,35]
+$SEGMENTO-B -------------------------------------------------------
+__CONTA = [16,36]
+__NAO_SEI = [20,40]

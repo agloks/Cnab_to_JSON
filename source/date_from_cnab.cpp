@@ -9,16 +9,16 @@ date_from_cnab::date_from_cnab(const char* path)
 {
     m_file = fopen(path, "r");
     std::cout << "Date From Cnab initialized with sucess\n" << std::endl;
-    int a = 34;
-    int b = 72;
-    int c = 4;
-    int d = 1;
+    // int a = 34;
+    // int b = 72;
+    // int c = 1;
+    // int d = 4;
     
-    this->fill_member(this->m_id, a, b);
-    this->fill_member(this->m_div, c, d);
+    // this->fill_member(this->m_id, a, b);
+    // this->fill_member(this->m_div, c, d);
 
-    std::cout << "value ->m_* = " << this->m_id << std::endl;
-    std::cout << "value ->m_* = " << this->m_div << std::endl;
+    // std::cout << "value ->m_* = " << this->m_id << std::endl;
+    // std::cout << "value ->m_* = " << this->m_div << std::endl;
 };
 
 date_from_cnab::~date_from_cnab()
@@ -26,10 +26,16 @@ date_from_cnab::~date_from_cnab()
     fclose(m_file);
 };
 
-void date_from_cnab::fill_member(std::string& member, int& initPos, int& endPos)
+void date_from_cnab::fill_member(std::string& member, int& initPos, int& length)
 {
-    member = utility::string_from_fgetc(this->m_file, std::abs(endPos - initPos), endPos);
+    member = utility::string_from_fgetc(this->m_file, length - initPos - 1, initPos);
 };
+
+void date_from_cnab::jumpLine(const int& quanty)
+{
+    std::cout << "jumo line date_from... " << quanty << std::endl;
+    utility::jump_lines(this->m_file, quanty);
+}
 
 /*
 fgetc = get only an unique char.
