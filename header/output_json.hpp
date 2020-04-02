@@ -35,6 +35,7 @@ output_json<T>::output_json(const char* path)
 template<typename T>
 output_json<T>::~output_json()
 {
+    this->erasePatchEndJson(5);
     fwrite("]", sizeof(char), 1, this->m_file);
     fclose(m_file);
 };

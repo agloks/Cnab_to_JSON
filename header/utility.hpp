@@ -14,11 +14,8 @@
 
 namespace utility {
     std::string convert_to_string(char* arr);
-
     std::string convert_to_string_by_arr(const char* arr);
-
     std::string convert_to_string_by_pointer(char* ptr_c, int size);
-
     void jump_lines(FILE* p_file, const int& jump);
 
     template<typename T, typename S = std::string, typename I = int>
@@ -59,11 +56,10 @@ namespace utility {
     };
 
     int position_subtext(std::string pattern, std::string& text);
-
     std::string string_from_fgetc(FILE* p_file, const int& len, const int& begin);
     std::vector<std::string> split(const std::string& s, char seperator);
     void isEnd(std::string& str);
-    void debug();
+    // void debug();
 };
 
 #endif

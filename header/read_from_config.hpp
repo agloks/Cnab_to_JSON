@@ -10,20 +10,10 @@ class read_from_config {
         read_from_config(const char* path);
         ~read_from_config();
     
-        std::string m_header;
-        std::string m_conta;
-        std::string m_agencia;
-        std::string m_id;
-        std::string m_nome_favorecido;
-        std::string m_valor;
-        std::string m_div;
-        std::string m_bloco_transacao_linhas_total;
-        std::string m_header_linhas_total;
-        std::string m_subheader;
+        std::string m_value;
         
         std::map<std::string, std::vector<std::map<std::string, std::string>>> m_all_items;
         std::map<std::string, std::vector<std::string>> m_items_on_segments;
-        std::map<std::string, std::string> m_values_on_item_segments;
     private:
         const char* m_path;
         void _fill_values();

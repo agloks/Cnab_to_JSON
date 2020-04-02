@@ -1,3 +1,4 @@
+@echo off
 echo "COMPILANDO"
 
 cl /c /I .. /EHsc ..\source\date_from_cnab.cpp

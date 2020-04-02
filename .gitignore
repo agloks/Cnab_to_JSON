@@ -6,5 +6,6 @@ TF6379.txt
 *.a
 *.lib
 *.exe
+*.json
 .vscode/
 .vscode/**

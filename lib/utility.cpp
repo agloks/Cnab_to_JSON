@@ -96,7 +96,7 @@ std::vector<std::string> utility::split(const std::string& s, char seperator)
     return output;
 }
 
-void utility::debug()
-{
-    std::cout << "can't understand it" << std::endl;
-};
+// void utility::debug()
+// {
+//     std::cout << "can't understand it" << std::endl;
+// };

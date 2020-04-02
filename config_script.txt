@@ -1,22 +1,28 @@
-##Aqui � onde seta as configura��es sobre o modelo do cnab que ser� lido, n�o mude o nome das variaveis nem suas posi��es.
+##Aqui é onde seta as configurações sobre o modelo do cnab que sera lido, não mude o nome das variaveis nem suas posições.
 
 $INSTRUCAO -------------------------------------------
 __HEADER_LINHAS_TOTAL = 2
-__BLOCO_TRANSACAO_LINHAS_TOTAL = 2
+__BLOCO_TRANSACAO_LINHAS_A = 1
+__BLOCO_TRANSACAO_LINHAS_B = 1
 $HEADER -----------------------------------------------------
 __HEADER = [17,42]
-__CODIGO_BANCO = [0,3]
+__AGENCIA_HEADER = [52,57]
+__DV_AGENCIA_HEADER = [57,58]
+__HEADER_CONTA = [58,70]
 __BANCO_BENEFICIARIO = [102,107]
-__TIPO_OPERACAO = [9,10]
-__TIPO_SERVICO = [10,11]
+__NOME_DO_BANCO = [17,21]
 $SUBHEADER -----------------------------------------------------
-__SUBHEADER = [72,81]
+__SUBHEADER = [72,80]
 $SEGMENTO-A --------------------------------------------------------
-__ID = [17,21]
+__ID = [73,79]
 __NOME_FAVORECIDO = [42,73]
-__AGENCIA = [19,27]
+__DATA = [93,101]
+__AGENCIA = [24,28]
 __VALOR = [101,135]
+__TIPO_MOVIMENTO = [14,15]
 __DIGITO_VERIFICADOR = [28,35]
+__CONTA = [30,42]
+__DV_CONTA_DESTINO = [28,29]
+__TIPO_CONTA = [30,33]
 $SEGMENTO-B -------------------------------------------------------
-__CONTA = [16,36]
-__NAO_SEI = [20,40]
+__COD_BANCO = [0,3]
