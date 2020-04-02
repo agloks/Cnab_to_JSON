@@ -1,3 +1,4 @@
+TF6379.txt
 *.REM
 *.RET
 *.o
@@ -5,5 +6,6 @@
 *.a
 *.lib
 *.exe
+*.json
 .vscode/
 .vscode/**
