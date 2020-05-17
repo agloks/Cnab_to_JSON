@@ -2,10 +2,10 @@
 #define DATE_FROM_CNAB_HPP
 #include <map>
 
-class date_from_cnab {
+class data_from_cnab {
     public:
-        date_from_cnab(const char* path);
-        ~date_from_cnab();
+        data_from_cnab(const char* path);
+        ~data_from_cnab();
 
         std::map<std::string, std::string> m_map_values;
 

@@ -53,7 +53,7 @@ int utility::position_subtext(std::string pattern, std::string& text)
 std::string utility::string_from_fgetc(FILE* p_file, const int& len, const int& begin)
 {
     std::string send;
-    fpos_t pos_save = ftell(p_file);
+    long int pos_save = ftell(p_file);
     fseek(p_file, begin, SEEK_CUR);
     for(int k = 0; k <= len; k++)
     {
