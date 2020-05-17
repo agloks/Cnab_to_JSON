@@ -3,7 +3,7 @@
 #include "header/output_json.hpp"
 #include "header/utility.hpp"
 #include "header/read_from_config.hpp"
-#include "header/date_from_cnab.hpp"
+#include "header/data_from_cnab.hpp"
 
 /*
 @argv[1] == path to config
@@ -11,7 +11,7 @@
 @argv[3] == path to output file
 */
 
-void header_bloc(read_from_config& obj_rfc, date_from_cnab& obj_dfc, const int& lines)
+void header_bloc(read_from_config& obj_rfc, data_from_cnab& obj_dfc, const int& lines)
 {
     int initPos = 0;
     int lengthPos = 0;
@@ -38,7 +38,7 @@ void header_bloc(read_from_config& obj_rfc, date_from_cnab& obj_dfc, const int& 
     obj_dfc.jumpLine(lines);
 }
 
-void subheader_bloc(read_from_config& obj_rfc, date_from_cnab& obj_dfc, const int& lines)
+void subheader_bloc(read_from_config& obj_rfc, data_from_cnab& obj_dfc, const int& lines)
 {
     int initPos = 0;
     int lengthPos = 0;
@@ -65,7 +65,7 @@ void subheader_bloc(read_from_config& obj_rfc, date_from_cnab& obj_dfc, const in
     obj_dfc.jumpLine(lines);
 }
 
-void segmento_a(read_from_config& obj_rfc, date_from_cnab& obj_dfc, const int& lines)
+void segmento_a(read_from_config& obj_rfc, data_from_cnab& obj_dfc, const int& lines)
 {
     int initPos = 0;
     int lengthPos = 0;
@@ -94,7 +94,7 @@ void segmento_a(read_from_config& obj_rfc, date_from_cnab& obj_dfc, const int& l
     obj_dfc.jumpLine(linhasJumpA);
 }
 
-void segmento_b(read_from_config& obj_rfc, date_from_cnab& obj_dfc, const int& lines)
+void segmento_b(read_from_config& obj_rfc, data_from_cnab& obj_dfc, const int& lines)
 {
     int initPos = 0;
     int lengthPos = 0;
@@ -157,7 +157,7 @@ int main(int argc, char* argv[])
         throw std::runtime_error("ARGUMENT TO CNAB NOT DEFINED");
 
     read_from_config rfc(argv[1]);
-    date_from_cnab dfc(argv[2]);
+    data_from_cnab dfc(argv[2]);
     output_json<std::map<std::string, std::string>> outJson(argv[3]);
 
     utility::print_map_vector_map<std::map<std::string, std::vector<std::map<std::string, std::string>>>, std::map<std::string, std::string>>(rfc.m_all_items);

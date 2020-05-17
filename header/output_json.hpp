@@ -18,7 +18,7 @@ class output_json{
         void erasePatchEndJson(int begin);
     private:
         FILE* m_file;
-        fpos_t m_pos_file;
+        long int m_pos_file;
 };
 
 //fwrite @text const char*, @size of element, @quanty element, @file stream
